@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { AppLayout } from './components/layout/AppLayout';
 import DashboardPage from './pages/DashboardPage';
 import CustomersPage from './pages/CustomersPage';
@@ -10,18 +11,21 @@ import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
-    <Routes>
-      <Route element={<AppLayout />}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/customers" element={<CustomersPage />} />
-        <Route path="/customers/:id" element={<CustomerProfilePage />} />
-        <Route path="/licenses" element={<LicensesPage />} />
-        <Route path="/reminders" element={<RemindersPage />} />
-        <Route path="/activity" element={<ActivityPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-      </Route>
-    </Routes>
+    <>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/customers" element={<CustomersPage />} />
+          <Route path="/customers/:id" element={<CustomerProfilePage />} />
+          <Route path="/licenses" element={<LicensesPage />} />
+          <Route path="/reminders" element={<RemindersPage />} />
+          <Route path="/activity" element={<ActivityPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+        </Route>
+      </Routes>
+      <Analytics />
+    </>
   );
 }
 
