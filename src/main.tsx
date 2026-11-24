@@ -8,6 +8,7 @@ import { NotificationProvider } from './contexts/NotificationContext';
 import { ReminderProvider } from './contexts/ReminderContext';
 import { RepositoryProvider } from './contexts/RepositoryContext';
 import { SecurityProvider } from './contexts/SecurityContext';
+import { AuthProvider } from './contexts/AuthContext';
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -15,15 +16,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <ThemeProvider>
         <RepositoryProvider>
-          <SecurityProvider>
-            <NotificationProvider>
-              <ReminderProvider>
-                <SidebarProvider>
-                  <App />
-                </SidebarProvider>
-              </ReminderProvider>
-            </NotificationProvider>
-          </SecurityProvider>
+          <AuthProvider>
+            <SecurityProvider>
+              <NotificationProvider>
+                <ReminderProvider>
+                  <SidebarProvider>
+                    <App />
+                  </SidebarProvider>
+                </ReminderProvider>
+              </NotificationProvider>
+            </SecurityProvider>
+          </AuthProvider>
         </RepositoryProvider>
       </ThemeProvider>
     </BrowserRouter>

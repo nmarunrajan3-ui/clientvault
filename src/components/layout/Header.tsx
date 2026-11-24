@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Search, Bell, Menu, WifiOff, CheckCircle2, Trash2, Lock, Cloud } from 'lucide-react';
+import { Search, Bell, Menu, WifiOff, CheckCircle2, Trash2, Lock, Cloud, LogOut } from 'lucide-react';
 import { useSidebar } from '../../contexts/SidebarContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { useSecurity } from '../../contexts/SecurityContext';
 import { useRepository } from '../../contexts/RepositoryContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const pageTitles: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -23,6 +24,7 @@ export function Header() {
   const { notifications, unreadCount, markAsRead, markAllAsRead, dismissNotification } = useNotifications();
   const { isLockConfigured, lockApp } = useSecurity();
   const { storageMode } = useRepository();
+  const { user, signOut } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
 
@@ -205,6 +207,23 @@ export function Header() {
             </div>
           )}
         </div>
+
+        {/* User Account & Sign Out */}
+        {user && (
+          <div className="flex items-center gap-1.5 pl-1.5 border-l border-border-light dark:border-border-dark">
+            <span className="hidden xl:inline-block text-2xs font-medium text-text-secondary dark:text-text-dark-secondary truncate max-w-[140px]">
+              {user.email}
+            </span>
+            <button
+              onClick={() => signOut()}
+              className="btn-ghost p-2 text-text-secondary dark:text-text-dark-secondary hover:text-status-danger"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut size={17} />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
