@@ -14,7 +14,9 @@ let inMemoryConfig: SupabaseConfig | null = null;
 export function getSupabaseConfig(): SupabaseConfig | null {
   // 1. Check environment variables (e.g. from Vercel / Netlify env vars)
   const envUrl = typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_SUPABASE_URL : undefined;
-  const envKey = typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_SUPABASE_ANON_KEY : undefined;
+  const envKey = typeof import.meta !== 'undefined' 
+    ? ((import.meta as any).env?.VITE_SUPABASE_ANON_KEY || (import.meta as any).env?.VITE_SUPABASE_PUBLISHABLE_KEY) 
+    : undefined;
   if (envUrl && envKey && typeof envUrl === 'string' && typeof envKey === 'string') {
     return { url: envUrl.trim(), anonKey: envKey.trim() };
   }
