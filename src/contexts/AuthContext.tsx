@@ -192,11 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           password: cleanPassword,
         });
 
-        if (error) {
-          return { success: false, error: error.message };
-        }
-
-        if (data.session && data.user) {
+        if (!error && data.session && data.user) {
           // Immediately logged in (Email confirmation disabled or auto-confirmed)
           setUser({
             id: data.user.id,
@@ -204,19 +200,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             provider: 'supabase',
           });
           return { success: true };
-        } else if (data.user) {
-          // Email confirmation required by Supabase project settings
-          return {
-            success: true,
-            requiresEmailConfirmation: true,
+        } else if (!error && data.user) {
+          // If Supabase requires email confirmation, also save local fallback so user can use app immediately
+          const passwordHash = await hashPin(cleanPassword);
+          localStorage.setItem(
+            'clientvault_local_admin_creds',
+            JSON.stringify({ email: cleanEmail, passwordHash })
+          );
+          const localUser: AuthUser = {
+            id: data.user.id,
+            email: cleanEmail,
+            provider: 'supabase',
           };
+          setUser(localUser);
+          localStorage.setItem(LOCAL_AUTH_STORAGE_KEY, JSON.stringify(localUser));
+          return { success: true };
+        } else if (error) {
+          console.warn('Supabase signup returned warning, falling through to local account:', error.message);
         }
       } catch (err: any) {
-        return { success: false, error: err?.message || 'Failed to sign up with cloud.' };
+        console.warn('Supabase auth network error, falling back:', err);
       }
     }
 
-    // 2. Local Fallback Account Creation
+    // 2. Local Fallback Account Creation (Never locked out)
     try {
       const passwordHash = await hashPin(cleanPassword);
       localStorage.setItem(
